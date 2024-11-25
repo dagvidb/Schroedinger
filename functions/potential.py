@@ -1,37 +1,25 @@
-from config import Constants, InitialValues
+from config import default_config
 import numpy as np
 
-constants = Constants()
-initial_values = InitialValues()
 
+def get_potential(config=default_config, **kwargs):
 
-def get_power_potential(n=2):
-    x = initial_values.x_grid
-    v0 = constants.potential_strength
-    return v0*x**n
+    x = config.initial_values.x_grid
+    v0 = config.constants.potential_strength
+    kind = config.constants.potential_type
 
+    if kind == "square_well":
+        a, b = kwargs.get('a', -5), kwargs.get('b', 5)
+        return np.where((x > a) & (x < b), 0, v0)
 
-def get_square_well(a=-5, b=5):
-    x = initial_values.x_grid
-    v0 = constants.potential_strength
-    return np.where((x > a) & (x < b), 0, v0)
+    elif kind == "square_wall":
+        a, b, d = kwargs.get('a', -5), kwargs.get('b', 5), kwargs.get('d', 0.5)
+        return np.where(((a - d <= x) & (x <= a)) | ((b <= x) & (x <= b + d)), v0, 0)
 
-
-def get_square_wall(a=-5, b=5, d=0.5):
-    x = initial_values.x_grid
-    v0 = constants.potential_strength
-    return np.where(((a - d <= x) & (x <= a)) | ((b <= x) & (x <= b + d)), v0, 0)
-
-
-def get_square_wall_right(b=5, d=0.5):
-    x = initial_values.x_grid
-    v0 = constants.potential_strength
-    return np.where(((b <= x) & (x <= b + d)), v0, 0)
-
-
-def get_square_wall_left(a=-5, d=0.5):
-    x = initial_values.x_grid
-    v0 = constants.potential_strength
-    return np.where(((a - d <= x) & (x <= a)), v0, 0)
+    elif kind == "power":
+        n = kwargs.get('n', 2)
+        return v0 * x ** n
+    else:
+        raise ValueError(f"Unknown potential type: {kind}")
 
 

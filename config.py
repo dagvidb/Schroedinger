@@ -6,6 +6,7 @@ class Constants:
         self.mass = 10
         self.h_bar = 1
         self.potential_strength = 25
+        self.potential_type = 'square_wall'
 
 
 class InitialValues:
@@ -45,3 +46,7 @@ class Config:
                     raise AttributeError(f"'{category}' has no attribute '{key}'")
         else:
             raise AttributeError(f"Config has no category '{category}'")
+
+
+# Initialize a default instance of Config
+default_config = Config()

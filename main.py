@@ -1,13 +1,12 @@
 from config import Config
-from functions.potential import *
+from functions.potential import get_potential
 from functions.wave_functions import get_wave_packet
 from plot.animate import animate
 from tools.simulate import simulate
 
-config = Config()
-
 
 def main():
+    config = Config()
     update_config = True
     if update_config:
         m = config.constants.mass
@@ -18,13 +17,13 @@ def main():
 
     # Define initial wave function and potential
     wave_packet = get_wave_packet()
-    potential = get_square_wall_right()
+    potential = get_potential(a=-10)
 
     # Simulate time-evolution
-    simulate_square_well = simulate(psi=wave_packet, v=potential)
+    simulate_square_well = simulate(psi=wave_packet, v=potential, config=config)
 
     # Plot animation
-    anim = animate(simulation=simulate_square_well)
+    animate(simulation=simulate_square_well)
     return
 
 

@@ -1,10 +1,9 @@
 import numpy as np
-from config import InitialValues
-
-initial_values = InitialValues()
+from config import default_config
 
 
-def get_wave_packet():
+def get_wave_packet(config=default_config):
+    initial_values = config.initial_values
     x = initial_values.x_grid
     x0 = initial_values.initial_position
     p0 = initial_values.initial_momentum
