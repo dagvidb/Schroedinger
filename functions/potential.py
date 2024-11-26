@@ -1,6 +1,13 @@
 from config import default_config
 import numpy as np
+import warnings
 
+warnings.warn(
+    "The module 'potential' is deprecated and will be removed in a future version. "
+    "Please use 'new_module' instead.",
+    DeprecationWarning,
+    stacklevel=2,
+)
 
 def get_potential(config=default_config, **kwargs):
 

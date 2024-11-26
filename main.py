@@ -1,5 +1,6 @@
 from config import Config
 from functions.potential import get_potential
+from potentials.potential import Potential
 from functions.wave_functions import get_wave_packet
 from plot.animate import animate
 from tools.simulate import simulate, normalize
@@ -7,7 +8,7 @@ from wavefunctions.initializer import initialize_wavefunction
 
 
 def main():
-    config = Config()
+    config = Config(dimensions=1)
     update_config = True
     if update_config:
         m = config.constants.mass
@@ -19,13 +20,14 @@ def main():
     # TODO: NB same config must be loaded to all functions below. Should fix more stable solution soon
     # Define initial wave function and potential
     potential = get_potential(config=config, a=-10)
+    potential_2 = Potential(config=config, a=-10).compute()
 
     # Initialize wave function object
     wave_function = initialize_wavefunction(config=config)
     wave_packet = wave_function.psi
 
     # Simulate time-evolution
-    simulate_square_well = simulate(psi=wave_packet, v=potential, config=config)
+    simulate_square_well = simulate(psi=wave_packet, v=potential_2, config=config)
 
     # Plot animation
     animate(simulation=simulate_square_well)
