@@ -2,40 +2,76 @@ import numpy as np
 
 
 class Constants:
+    """
+    Class to hold physical constants used in the simulation.
+    """
     def __init__(self) -> None:
-        self.mass = 10
-        self.h_bar = 1
-        self.potential_strength = 25
-        self.potential_type = 'square_wall'
+        self.mass = 10.0               # Mass of the particle
+        self.h_bar = 1.0               # Reduced Planck's constant
+        self.potential_strength = 25.0  # Default strength of the potential
+        self.potential_type = "square_well"  # Default type of potential
 
 
 class InitialValues:
-    def __init__(self) -> None:
-        self.initial_position = 0
-        self.initial_position_uncertainty = 1
-        self.initial_momentum = 20
-        self.x_grid = np.linspace(-10, 10, 3000)
-        self.dx = self.x_grid[1] - self.x_grid[0]
-        self.dt = self.dx ** 2
+    """
+    Class to hold initial values for the simulation, including spatial grid and wavefunction parameters.
+    Supports 1D, 2D, and 3D simulations.
+    """
+    def __init__(self, dimensions: int = 1) -> None:
+        self.dimensions = dimensions
+
+        # Grid setup based on dimensions
+        if dimensions == 1:
+            self.x_grid = np.linspace(-10, 10, 3000)
+            self.dx = self.x_grid[1] - self.x_grid[0]
+            self.dt = self.dx**2
+        elif dimensions == 2:
+            x = np.linspace(-10, 10, 100)
+            y = np.linspace(-10, 10, 100)
+            self.x_grid, self.y_grid = np.meshgrid(x, y)
+            self.dx = x[1] - x[0]
+            self.dt = self.dx**2
+        elif dimensions == 3:
+            x = np.linspace(-10, 10, 50)
+            y = np.linspace(-10, 10, 50)
+            z = np.linspace(-10, 10, 50)
+            self.x_grid, self.y_grid, self.z_grid = np.meshgrid(x, y, z)
+            self.dx = x[1] - x[0]
+            self.dt = self.dx**2
+        else:
+            raise ValueError("Only 1D, 2D, and 3D grids are supported.")
+
+        # Wavefunction parameters
+        self.initial_position = 0.0                  # Initial position of the wave packet
+        self.initial_position_uncertainty = 1.0      # Width of the Gaussian wave packet
+        self.initial_momentum = 20.0                 # Momentum of the wave packet
 
 
 class SimulationParams:
+    """
+    Class to hold simulation parameters.
+    """
     def __init__(self) -> None:
-        self.steps = 200000
-        self.save_every = 2000
+        self.steps = 200000          # Number of time steps to simulate
+        self.save_every = 2000      # Save the wavefunction every N steps
 
 
 class Config:
-    def __init__(self) -> None:
+    """
+    Main configuration class that groups constants, initial values, and simulation parameters.
+    """
+    def __init__(self, dimensions: int = 1) -> None:
         self.constants = Constants()
-        self.initial_values = InitialValues()
+        self.initial_values = InitialValues(dimensions=dimensions)
         self.simulation_params = SimulationParams()
 
-    def update(self, category, **kwargs):
+    def update(self, category: str, **kwargs) -> None:
         """
         Update parameters dynamically for a specific category.
-        Example usage:
-            config.update("simulation", steps=2000, save_every=50)
+
+        Args:
+            category (str): The category to update (e.g., 'constants', 'initial_values', 'simulation_params').
+            kwargs: Key-value pairs of parameters to update.
         """
         if hasattr(self, category):
             category_obj = getattr(self, category)
@@ -47,6 +83,4 @@ class Config:
         else:
             raise AttributeError(f"Config has no category '{category}'")
 
-
-# Initialize a default instance of Config
 default_config = Config()
