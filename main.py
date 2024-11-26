@@ -15,9 +15,11 @@ def main():
         config.update("constants", potential_strength=0.8*kinetic_energy)
         config.update("initial_values", initial_position=-8)
 
+
+    # TODO: NB same config must be loaded to all functions below. Should fix more stable solution soon
     # Define initial wave function and potential
-    wave_packet = get_wave_packet()
-    potential = get_potential(a=-10)
+    wave_packet = get_wave_packet(config=config)
+    potential = get_potential(config=config, a=-10)
 
     # Simulate time-evolution
     simulate_square_well = simulate(psi=wave_packet, v=potential, config=config)
