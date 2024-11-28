@@ -1,10 +1,18 @@
+"""
+main.py
+Executable script for solving the Schrödinger equation
+"""
+# New packages
 from config import Config
-from functions.potential import get_potential
 from potentials.potential import Potential
-from functions.wave_functions import get_wave_packet
+from wavefunctions.initializer import initialize_wavefunction
+from tools.simulate import hamiltonian
+from plot.animate import complex_plot
+import matplotlib.pyplot as plt
+# Old packages
 from plot.animate import animate
 from tools.simulate import simulate, normalize
-from wavefunctions.initializer import initialize_wavefunction
+from simulations.simulation import Simulation
 
 
 def main():
@@ -17,20 +25,21 @@ def main():
         config.update("constants", potential_strength=1.2*kinetic_energy)
         config.update("initial_values", initial_position=-5)
 
-    # TODO: NB same config must be loaded to all functions below. Should fix more stable solution soon
-    # Define initial wave function and potential
-    potential = get_potential(config=config, a=-10)
-    potential_2 = Potential(config=config, a=-10).compute()
-
     # Initialize wave function object
     wave_function = initialize_wavefunction(config=config)
-    wave_packet = wave_function.psi
+    # Define initial wave function and potential
+    potential = Potential(config=config, a=-10)
 
-    # Simulate time-evolution
-    simulate_square_well = simulate(psi=wave_packet, v=potential_2, config=config)
+    # Create and run simulation
+    simulation = Simulation(wave_function, potential, config)
+    simulation.run()
+
+    results = simulation.get_results()
+
+    # simulate_square_well = simulate(psi=wave_packet, v=potential, config=config)
 
     # Plot animation
-    animate(simulation=simulate_square_well)
+    animate(simulation=results)
     return
 
 

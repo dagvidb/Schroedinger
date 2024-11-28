@@ -2,6 +2,12 @@ import numpy as np
 from tqdm import tqdm
 from config import default_config
 
+warnings.warn(
+    "The module 'simulate' is deprecated and will be removed in a future version. "
+    "Please use 'new_module' instead.",
+    DeprecationWarning,
+    stacklevel=2,
+)
 
 def normalize(f,config=default_config):
     dx = config.initial_values.dx
@@ -9,7 +15,7 @@ def normalize(f,config=default_config):
     return f / np.sqrt(norm)
 
 
-def d_dx2(f, config=default_config):
+def laplacian(f, config=default_config):
     dx = config.initial_values.dx
     df_dx2 = -2*f
     df_dx2[1:] += f[:-1]
@@ -19,8 +25,8 @@ def d_dx2(f, config=default_config):
 
 def hamiltonian(phi, v=0, config=default_config):
     m = config.constants.mass
-    h = config.constants.h_bar ** 2
-    return 1j*h/2/m * d_dx2(phi) - 1j*v*phi/h
+    h = config.constants.h_bar
+    return 1j*h/(2*m) * laplacian(phi) - 1j*v*phi/h
 
 
 def rk4(phi, dt, v=0):

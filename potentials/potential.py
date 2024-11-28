@@ -46,7 +46,7 @@ class Potential:
         else:
             raise ValueError("Unsupported number of dimensions in config.")
 
-    def compute(self) -> np.ndarray:
+    def get_potential(self) -> np.ndarray:
         """
         Compute the potential values over the grid.
 
