@@ -52,8 +52,8 @@ class SimulationParams:
     Class to hold simulation parameters.
     """
     def __init__(self) -> None:
-        self.steps = 200000          # Number of time steps to simulate
-        self.save_every = 2000      # Save the wavefunction every N steps
+        self.steps = 2000          # Number of time steps to simulate
+        self.save_every = 200      # Save the wavefunction every N steps
 
 
 class Config:

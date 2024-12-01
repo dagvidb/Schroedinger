@@ -1,6 +1,7 @@
 import numpy as np
 from tqdm import tqdm
 from config import default_config
+import warnings
 
 warnings.warn(
     "The module 'simulate' is deprecated and will be removed in a future version. "
